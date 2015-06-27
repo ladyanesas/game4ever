@@ -12,6 +12,7 @@ $app->get ( '/jogos', 'getJogos' );
 $app->get ( '/jogos/:nome', 'getNome' );
 $app->get ( '/jogos/:genero', 'getGenero' );
 $app->post ( '/jogos', 'addJogo' );
+$app->put('/upJogos/:id','upJogo');
 
 $app->run ();
 function getConn() {
@@ -69,5 +70,30 @@ function addJogo() {
 	echo "Cadastro Realizado com sucesso!<br><br>";
 	echo json_encode ( $jogo );
 }
+
+//#########update dos jogos
+ function upJogo($id)
+       {
+               $request = \Slim\Slim::getInstance()->request();
+               $jogo = json_decode($request->getBody());
+               $sql = "UPDATE jogos SET nome_jogo=:nome_jogo,idioma=:idioma,regiao=:regiao,genero=:genero,indicacao=:indicacao,plataforma=:plataforma,sinopse=:sinopse,valor_medio_jogo=:valor_medio_jogo,imagem_jogo=:imagem_jogo,dataInclusao=:dataInclusao,data_lancamento=:data_lancamento";
+               $conn = getConn();
+               $stmt = $conn->prepare($sql);
+               $stmt->bindParam("id_jogo",$jogo->id_jogo);
+               $stmt->bindParam("versao",$jogo->versao);
+               $stmt->bindParam("nome_jogo",$jogo->nome_jogo);
+               $stmt->bindParam("idioma",$jogo->idioma);
+               $stmt->bindParam("regiao",$jogo->regiao);
+               $stmt->bindParam("genero",$jogo->genero);
+               $stmt->bindParam("indicacao",$jogo->indicacao);
+               $stmt->bindParam("plataforma",$jogo->plataforma);
+               $stmt->bindParam("sinopse",$jogo->sinopse);
+               $stmt->bindParam("valor_medio_jogo",$jogo->valor_medio_jogo);
+               $stmt->bindParam("imagem_jogo",$jogo->imagem_jogo);
+               $stmt->bindParam("data_lancamento",$jogo->data_lancamento);
+               $stmt->execute();
+               echo json_encode($jogo);
+       }
+
 
 ?>
